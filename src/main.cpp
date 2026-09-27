@@ -220,9 +220,6 @@ static LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
         case WM_SIZE:
             if (wParam != SIZE_MINIMIZED) { g_ResizeWidth = LOWORD(lParam); g_ResizeHeight = HIWORD(lParam); }
             return 0;
-        case WM_DPICHANGED:
-            if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_DpiEnableScaleViewports) { /* handled */ }
-            return 0;
         case WM_DESTROY:
             ::PostQuitMessage(0);
             return 0;

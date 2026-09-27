@@ -2,6 +2,7 @@
 // System "optimizer" tweaks. Everything goes through WinAPI / ntdll / ADVAPI32.
 // Registry and service changes require administrator privileges.
 
+#include <windows.h>
 #include <cstdint>
 #include <optional>
 #include <string>
