@@ -1,0 +1,8 @@
+build/
+out/
+*.user
+.vs/
+.vscode/
+.idea/
+*.png
+*.log
