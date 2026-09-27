@@ -152,10 +152,11 @@ ActionResult setNagleOff() {
 
 ActionResult setService(const std::wstring& serviceName, bool disable) {
     ActionResult r;
+    const std::string narrow(serviceName.begin(), serviceName.end());
     SC_HANDLE scm = ::OpenSCManagerW(nullptr, nullptr, SC_MANAGER_CONNECT);
     if (!scm) { r.message = "SCM open failed (admin required)"; return r; }
     SC_HANDLE svc = ::OpenServiceW(scm, serviceName.c_str(), SERVICE_CHANGE_CONFIG | SERVICE_QUERY_CONFIG | SERVICE_STOP);
-    if (!svc) { r.message = "Service " + std::wstring(serviceName.begin(), serviceName.end()) + " not found"; CloseServiceHandle(scm); return r; }
+    if (!svc) { r.message = "Service " + narrow + " not found"; CloseServiceHandle(scm); return r; }
 
     DWORD startType = disable ? SERVICE_DISABLED : SERVICE_DEMAND_START;
     SERVICE_STATUS status{};
@@ -164,9 +165,8 @@ ActionResult setService(const std::wstring& serviceName, bool disable) {
                                      SERVICE_NO_CHANGE, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
     ::CloseServiceHandle(svc);
     ::CloseServiceHandle(scm);
-    std::string name(serviceName.begin(), serviceName.end());
     r.ok = ok != FALSE;
-    r.message = ok ? (name + (disable ? " disabled" : " enabled")) : ("ChangeServiceConfig failed for " + name);
+    r.message = ok ? (narrow + (disable ? " disabled" : " enabled")) : ("ChangeServiceConfig failed for " + narrow);
     return r;
 }
 

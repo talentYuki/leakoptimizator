@@ -80,8 +80,7 @@ void Metrics::frame(double dt) {
     fps_.store(sum / std::max(1, windowN_));
 }
 
-double Metrics::cpuTempC() const { return cpu_.load(); }
-double Metrics::gpuTempC() const { return gpu_.load(); }
+// cpuTempC()/gpuTempC() are inline in the header.
 
 void Metrics::worker() {
     PdhQuery q;

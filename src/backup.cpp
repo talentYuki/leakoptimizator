@@ -61,6 +61,14 @@ bool writeRegItem(const RegItem& it) {
 // ---------------------------------------------------------------------------
 // jsonxx helpers
 // ---------------------------------------------------------------------------
+std::string utf8(const std::wstring& w) {
+    if (w.empty()) return {};
+    int n = WideCharToMultiByte(CP_UTF8, 0, w.data(), (int)w.size(), nullptr, 0, nullptr, nullptr);
+    std::string out(n > 0 ? n : 0, '\0');
+    if (n > 0) WideCharToMultiByte(CP_UTF8, 0, w.data(), (int)w.size(), out.data(), n, nullptr, nullptr);
+    return out;
+}
+
 jsonxx::Value bytesToJson(const std::vector<unsigned char>& d) {
     jsonxx::Array a;
     for (unsigned char b : d) a.emplace_back(static_cast<int>(b));
@@ -124,7 +132,7 @@ std::string snapshotToFile(const std::string& path) {
         jsonxx::Object o;
         if (t.isService) {
             o.emplace("kind", jsonxx::Value("service"));
-            o.emplace("name", jsonxx::Value(std::wstring(t.name.begin(), t.name.end())));
+            o.emplace("name", jsonxx::Value(utf8(t.name)));
             SC_HANDLE scm = OpenSCManagerW(nullptr, nullptr, SC_MANAGER_CONNECT);
             if (scm) {
                 SC_HANDLE h = OpenServiceW(scm, t.name.c_str(), SERVICE_QUERY_CONFIG);
@@ -146,8 +154,8 @@ std::string snapshotToFile(const std::string& path) {
             if (readRegItem(it)) {
                 o.emplace("kind", jsonxx::Value("reg"));
                 o.emplace("root", jsonxx::Value(it.root));
-                o.emplace("path", jsonxx::Value(std::wstring(it.path.begin(), it.path.end())));
-                o.emplace("name", jsonxx::Value(std::wstring(it.name.begin(), it.name.end())));
+                o.emplace("path", jsonxx::Value(utf8(it.path)));
+                o.emplace("name", jsonxx::Value(utf8(it.name)));
                 o.emplace("type", jsonxx::Value(static_cast<int>(it.type)));
                 o.emplace("data", bytesToJson(it.data));
                 items.emplace_back(jsonxx::Value(std::move(o)));
@@ -175,7 +183,7 @@ int restoreFromFile(const std::string& path) {
     for (const auto& item : rootVal.at("items").asArray()) {
         if (item.type() != jsonxx::Type::Object) continue;
         const jsonxx::Object& o = item.asObject();
-        std::string kind = o.has("kind") ? o.at("kind").asString() : "";
+        std::string kind = (o.find("kind") != o.end()) ? o.at("kind").asString() : "";
         if (kind == "reg") {
             RegItem it;
             it.root = o.at("root").asString();

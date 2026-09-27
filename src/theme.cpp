@@ -128,7 +128,7 @@ bool loadFromFile(const std::string& path, Theme& out) {
         out.accent2 = vec4FromJson(o.at("accent2"));
         out.bg      = vec4FromJson(o.at("bg"));
         out.text    = vec4FromJson(o.at("text"));
-        if (o.has("dark")) out.dark = o.at("dark").asBool();
+        if (o.find("dark") != o.end()) out.dark = o.at("dark").asBool();
         return true;
     } catch (...) {
         return false;

@@ -47,6 +47,8 @@ add_executable(UGO WIN32
   src/overlay.cpp
 )
 target_include_directories(UGO PRIVATE src third_party/jsonxx)
+target_include_directories(UGO PRIVATE
+  third_party/imgui third_party/imgui/backends third_party/implot)
 target_link_libraries(UGO PRIVATE imgui implot jsonxx)
 
 target_compile_definitions(UGO PRIVATE UNICODE _UNICODE _WIN32_WINNT=0x0A00)

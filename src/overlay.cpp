@@ -92,31 +92,29 @@ void Overlay::redrawSurface() {
 
     if (bits) {
         Gdiplus::Graphics g(mem);
-        g.SetSmoothingMode(SmoothingModeAntiAlias);
-        g.SetTextRenderingHint(TextRenderingHintAntiAlias);
+        g.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
+        g.SetTextRenderingHint(Gdiplus::TextRenderingHintAntiAlias);
 
         float ar = ar_.load(), ag = ag_.load(), ab = ab_.load(), aa = aa_.load();
-        Color accent((BYTE)(aa * 255), (BYTE)(ar * 255), (BYTE)(ag * 255), (BYTE)(ab * 255));
-        SolidBrush accentBrush(accent);
-        SolidBrush textBrush(Color(230, 235, 235, 238));
-        SolidBrush dimBrush(Color(200, 160, 163, 168));
+        Gdiplus::Color accent((BYTE)(aa * 255), (BYTE)(ar * 255), (BYTE)(ag * 255), (BYTE)(ab * 255));
+        Gdiplus::SolidBrush accentBrush(accent);
+        Gdiplus::SolidBrush textBrush(Gdiplus::Color(230, 235, 235, 238));
 
-        // accent header bar
         g.FillRectangle(&accentBrush, 6, 6, kWidth - 12, 3);
 
-        Font big(L"Segoe UI", 24, FontStyleBold, UnitPixel);
-        Font small(L"Segoe UI", 15, FontStyleRegular, UnitPixel);
-        StringFormat sf;
+        Gdiplus::Font fontBig(L"Segoe UI", 24.0f, Gdiplus::FontStyleBold, Gdiplus::UnitPixel);
+        Gdiplus::Font fontSmall(L"Segoe UI", 15.0f, Gdiplus::FontStyleRegular, Gdiplus::UnitPixel);
+        Gdiplus::StringFormat sf;
 
         std::wstring fps = L"FPS " + std::to_wstring((int)(fps_.load() + 0.5f));
-        g.DrawString(fps.c_str(), -1, &big, PointF(14, 20), &sf, &textBrush);
+        g.DrawString(fps.c_str(), -1, &fontBig, Gdiplus::PointF(14.0f, 20.0f), &sf, &textBrush);
 
         wchar_t line[128];
-        float cpu = cpu_.load(), gpu = gpu_.load();
-        _snwprintf_s(line, _TRUNCATE, L"CPU %5.1f C", (cpu < 0) ? 0.0 : (double)cpu);
-        g.DrawString(line, -1, &small, PointF(14, 58), &sf, &textBrush);
-        _snwprintf_s(line, _TRUNCATE, L"GPU %5.1f C", (gpu < 0) ? 0.0 : (double)gpu);
-        g.DrawString(line, -1, &small, PointF(14, 82), &sf, &textBrush);
+        double cpu = (double)cpu_.load(), gpu = (double)gpu_.load();
+        swprintf_s(line, L"CPU %5.1f C", (cpu < 0) ? 0.0 : cpu);
+        g.DrawString(line, -1, &fontSmall, Gdiplus::PointF(14.0f, 58.0f), &sf, &textBrush);
+        swprintf_s(line, L"GPU %5.1f C", (gpu < 0) ? 0.0 : gpu);
+        g.DrawString(line, -1, &fontSmall, Gdiplus::PointF(14.0f, 82.0f), &sf, &textBrush);
 
         premultiply(bits);
     }
