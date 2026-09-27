@@ -12,11 +12,11 @@
 #include <chrono>
 #include <string>
 
-#pragma comment(lib, "d3d11.lib")
-#pragma comment(lib, "dxgi.lib")
-#pragma comment(lib, "d3dcompiler.lib")
-
 using namespace std::chrono;
+
+// Backend window-message hook. Declared here explicitly so the symbol is
+// always visible regardless of backend-header include-order quirks.
+LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 // ---------------- D3D11 globals ----------------
 static ID3D11Device*            g_pd3dDevice = nullptr;
@@ -120,7 +120,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR, int) {
     wc.lpszClassName = L"UGOMainWindowClass";
     RegisterClassExW(&wc);
 
-    HWND hwnd = CreateWindowExW(0, wc.lpszClassName, L"Universal Game Optimizer",
+    HWND hwnd = CreateWindowExW(0, wc.lpszClassName, L"LeakOptimizator",
                                 WS_OVERLAPPEDWINDOW,
                                 120, 80, 940, 640, nullptr, nullptr, wc.hInstance, nullptr);
     if (!hwnd) { return 1; }

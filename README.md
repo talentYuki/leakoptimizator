@@ -1,4 +1,4 @@
-# Universal Game Optimizer
+# LeakOptimizator
 
 A Windows desktop utility that detects your hardware, applies performance
 tweaks, and shows a live in-game overlay — built with **C++20**, **ImGui**,
@@ -39,7 +39,7 @@ cmake -S . -B build -A x64
 cmake --build build --config Release
 ```
 
-The `build/Release/UGO.exe` binary is produced. Run it **as administrator**
+The `build/Release/LeakOptimizator.exe` binary is produced. Run it **as administrator**
 to use the tweaks.
 
 ## Project layout

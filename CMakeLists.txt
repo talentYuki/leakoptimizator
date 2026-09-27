@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(UniversalGameOptimizer LANGUAGES CXX)
+project(LeakOptimizator LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -36,7 +36,7 @@ add_library(jsonxx INTERFACE)
 target_include_directories(jsonxx INTERFACE third_party/jsonxx)
 
 # ---- App ----
-add_executable(UGO WIN32
+add_executable(LeakOptimizator WIN32
   src/main.cpp
   src/ui.cpp
   src/hardware.cpp
@@ -46,12 +46,12 @@ add_executable(UGO WIN32
   src/metrics.cpp
   src/overlay.cpp
 )
-target_include_directories(UGO PRIVATE src third_party/jsonxx)
-target_include_directories(UGO PRIVATE
+target_include_directories(LeakOptimizator PRIVATE src third_party/jsonxx)
+target_include_directories(LeakOptimizator PRIVATE
   third_party/imgui third_party/imgui/backends third_party/implot)
-target_link_libraries(UGO PRIVATE imgui implot jsonxx)
+target_link_libraries(LeakOptimizator PRIVATE imgui implot jsonxx)
 
-target_compile_definitions(UGO PRIVATE UNICODE _UNICODE _WIN32_WINNT=0x0A00)
+target_compile_definitions(LeakOptimizator PRIVATE UNICODE _UNICODE _WIN32_WINNT=0x0A00)
 
 # ---- Windows SDK libraries ----
 set(win_libs
@@ -61,4 +61,4 @@ set(win_libs
   pdh                      # performance counters (CPU temp)
   setupapi advapi32 shell32 user32 gdi32 comctl32
 )
-target_link_libraries(UGO PRIVATE ${win_libs})
+target_link_libraries(LeakOptimizator PRIVATE ${win_libs})
