@@ -16,3 +16,10 @@ jobs:
 
       - name: Build
         run: cmake --build build --config Release --parallel 4
+
+      - name: Upload artifact (built .exe)
+        uses: actions/upload-artifact@v4
+        with:
+          name: LeakOptimizator-release
+          path: build/Release/LeakOptimizator.exe
+          if-no-files-found: error
